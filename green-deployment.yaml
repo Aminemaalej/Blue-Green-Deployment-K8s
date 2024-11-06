@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-deployment
+  labels:
+    app: example-app
+    version: green
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: example-app
+      version: green
+  template:
+    metadata:
+      labels:
+        app: example-app
+        version: green
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+          - containerPort: 80
+          lifecycle:
+              postStart:
+                exec:
+                  command: ["/bin/sh", "-c", "echo '<h1 style=\"color:green\">Hello from the Green Version!</h1>' > /usr/share/nginx/html/index.html"]
